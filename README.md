@@ -24,5 +24,5 @@ Decryptded message:  I am not encrypted anymore.
 
 Happy hacking ! :smiley:
 
-[<img src="http://www.hackthebox.eu/badge/image/249498" alt="Hack The Box">](https://www.hackthebox.eu/profile/249498)
-[![thm_badge](images/sig_thm_omni.png "thm_badge")](https://tryhackme.com/p/D3rf)
+[<img src="http://www.hackthebox.eu/badge/image/249498" alt="Hack The Box">](https://www.hackthebox.eu/profile/249498)   
+[TryHackMe public profile](https://tryhackme.com/p/D3rf)
