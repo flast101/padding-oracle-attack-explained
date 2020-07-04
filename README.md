@@ -2,7 +2,7 @@
 Padding Oracle attack fully explained and coded from scratch in Python3.
 
 
-## Explanations
+## Explainations
 Coming soon<sup><sup>TM</sup></sup>.
 
 ## Usage
