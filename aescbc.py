@@ -46,7 +46,7 @@ def oracle(encrypted):
 
 usage = """
 Usage:
-  python3 paescbc.py <message>          encrypts and displays the message (out put in hex format)
+  python3 paescbc.py <message>         encrypts and displays the message (output in hex format)
   python3 aescbc.py -d <hex code>      decrypts and displays the message
 
 Cryptographic parameters can be changed in settings.py
