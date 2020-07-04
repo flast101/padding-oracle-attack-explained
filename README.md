@@ -1,11 +1,10 @@
 # Padding Oracle Explained
 Padding Oracle attack fully explained and coded from scratch in Python3.
 
-* * * 
-## Explanations
-Coming soon<sup><sup>TM</sup></sup>
 
-* * * 
+## Explanations
+Coming soon<sup><sup>TM</sup></sup>.
+
 ## Usage
 
 ~~~
@@ -15,7 +14,6 @@ $ python3 poracle_exploit.py -o <hex code>     displays oracle answer
 Cryptographic parameters can be changed in settings.py
 ~~~
 
-* * * 
 ## Example
 
 ~~~
