@@ -37,10 +37,6 @@ def pkcs7_padding(data):
           pkcs7 = False
     return pkcs7
 
-# Determine if the message is encrypted with valid PKCS7 padding
-def oracle(encrypted):
-    return pkcs7_padding(decryption(encrypted))
-
 
 #### Script ####
 
