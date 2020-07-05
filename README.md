@@ -2,8 +2,9 @@
 Padding Oracle attack fully explained and coded from scratch in Python3.
 
 
-## Explainations
-Coming soon<sup><sup>TM</sup></sup>.
+## Theory and Explanation
+You will find here explanation of the CBC mode vulnerability and how to exploit it. This part is under construction in the [Wiki Page](https://github.com/flast101/padding-oracle-attack-explained/wiki).
+
 
 ## Usage
 
