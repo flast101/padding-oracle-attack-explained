@@ -1,5 +1,3 @@
-_[<-- Back](https://flast101.github.io)_
-
 # Padding Oracle Attack Explained
 Padding Oracle attack fully explained and coded from scratch in Python3.
 
@@ -76,6 +74,5 @@ Decrypting with the incorrect IV causes the first block of plaintext to be corru
 
 
 
-Happy hacking !   
+Happy hacking !   :smiley:
 
-_[<-- Back](https://flast101.github.io)_
