@@ -1,20 +1,26 @@
+
 # Padding Oracle Attack Explained
 Padding Oracle attack fully explained and coded from scratch in Python3.
 
 ------ Page Under Construction -------
 ### Summary  
-**1- Overview**    
+
+**1- Overview**  
+
 **2- Usage**    
+
 **3- AES-CBC Ciphering**    
 3.1- Advanced Encryption Standard (AES)    
-3.2- Cipher Block Chaining (CBC)    
+3.2- Cipher Block Chaining (CBC)  
+
 **4- Exploiting CBC mode**    
 4.1- PKCS7 padding validation function    
 4.2- Ask the Oracle    
 4.3- CBC mode vulnerability    
+
 **5- Padding Oracle Attack**    
 
-
+* * *
 ## 1- Overview
 
 The padding oracle attack is a spectacular attack because it allows to decrypt a message that has been intercepted if the message was encrypted using CBC mode. 
@@ -23,7 +29,6 @@ It will only require being able to ensure that we are able to obtain a response 
 In this article, we will focus on how to use this vulnerability and propose a python script that decrypts a message encrypted in AES-CBC.
 
 * * *
-
 ## 2- Usage
 
 If you're only insterested in using the code, the chapter 2 is all you need. However, please note that this code consider that you know the initialization vector, which is usually wrong in real life
@@ -96,7 +101,6 @@ Decrypting with the incorrect IV causes the first block of plaintext to be corru
 
 
 
-* * *
 
 
 * * *
@@ -138,7 +142,14 @@ def oracle(encrypted):
 ![four_blocks.png](images/four_blocks.png "four_blocks.png")
 
 
-
+* * *
 ## 5- Padding Oracle Attack
 
+
+
+
+
+
+
+Happy hacking !   : smiley:
 
