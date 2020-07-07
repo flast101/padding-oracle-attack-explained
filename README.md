@@ -84,7 +84,7 @@ CBC has been the most commonly used mode of operation, in applications such as V
 If the first block has the index 0, the mathematical formula for CBC encryption is:
 
 **C<sub>i</sub> = E<sub>K</sub> (P<sub>i</sub> ⊕ C<sub>i-1</sub>) for i ≥ 1,     
-C<sub>0</sub> = IV**
+C<sub>0</sub> = E<sub>K</sub> (P<sub>0</sub> ⊕ IV)**
 
 Where E<sub>K</sub> is the function of encryption with the key K and C<sub>0</sub> is equal to the initialization vector.
 
