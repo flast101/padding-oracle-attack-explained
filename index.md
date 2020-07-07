@@ -1,5 +1,6 @@
 _[<-- Back](https://flast101.github.io)_
 
+
 # Padding Oracle Attack Explained
 Padding Oracle attack fully explained and coded from scratch in Python3.
 
@@ -43,7 +44,7 @@ Cryptographic parameters can be changed in `settings.py`
 
 Encyption and decryption using AES-CBC alogorithm:
 ~~~
-$ python3 paescbc.py <message>         encrypts and displays the message (output in hex format)
+$ python3 aescbc.py <message>         encrypts and displays the message (output in hex format)
 $ python3 aescbc.py -d <hex code>      decrypts and displays the message
 ~~~
 
@@ -91,7 +92,7 @@ CBC has been the most commonly used mode of operation, in applications such as V
 
 If the first block has the index 0, the mathematical formula for CBC encryption is:
 
-C<sub>i</sub> = E<sub>K</sub> (P<sub>i</sub> ⊕ C<sub>i-1)</sub> for i ≥ 1,     
+C<sub>i</sub> = E<sub>K</sub> (P<sub>i</sub> ⊕ C<sub>i-1</sub>) for i ≥ 1,     
 C<sub>0</sub> = IV
 
 Where E<sub>K</sub> is the function of encryption with the key K and C<sub>0</sub> is equal to the initialization vector.
@@ -119,11 +120,11 @@ def pkcs7_padding(data):
     pkcs7 = True
     last_byte_padding = data[-1]
     if(last_byte_padding < 1 or last_byte_padding > 16):
-      pkcs7 = False
+        pkcs7 = False
     else:
-      for i in range(0,last_byte_padding):
-        if(last_byte_padding != data[-1-i]):
-          pkcs7 = False
+        for i in range(0,last_byte_padding):
+            if(last_byte_padding != data[-1-i]):
+                pkcs7 = False
     return pkcs7
 ```
 
@@ -145,6 +146,14 @@ def oracle(encrypted):
 
 * * *
 ## 5- Padding Oracle Attack
+
+
+
+
+
+
+
+Happy hacking !   : smiley:
 
 
 
