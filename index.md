@@ -5,15 +5,20 @@ Padding Oracle attack fully explained and coded from scratch in Python3.
 
 ------ Page Under Construction -------
 ### Summary  
-**1- Overview**    
+
+**1- Overview**  
+
 **2- Usage**    
+
 **3- AES-CBC Ciphering**    
 3.1- Advanced Encryption Standard (AES)    
-3.2- Cipher Block Chaining (CBC)    
+3.2- Cipher Block Chaining (CBC)  
+
 **4- Exploiting CBC mode**    
 4.1- PKCS7 padding validation function    
 4.2- Ask the Oracle    
 4.3- CBC mode vulnerability    
+
 **5- Padding Oracle Attack**    
 
 
