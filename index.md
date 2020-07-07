@@ -1,26 +1,20 @@
 _[<-- Back](https://flast101.github.io)_
 
 
+
 # Padding Oracle Attack Explained
 Padding Oracle attack fully explained and coded from scratch in Python3.
 
 ------ Page Under Construction -------
+
+
 ### Summary  
 
-**1- Overview**  
-
-**2- Usage**    
-
-**3- AES-CBC Ciphering**    
-3.1- Advanced Encryption Standard (AES)    
-3.2- Cipher Block Chaining (CBC)  
-
-**4- Exploiting CBC mode**    
-4.1- PKCS7 padding validation function    
-4.2- Ask the Oracle    
-4.3- CBC mode vulnerability    
-
-**5- Padding Oracle Attack**    
+1- Overview   
+2- Script Usage    
+3- AES-CBC Ciphering    
+4- Exploiting CBC mode    
+5- Padding Oracle Attack    
 
 * * *
 ## 1- Overview
@@ -31,7 +25,7 @@ It will only require being able to ensure that we are able to obtain a response 
 In this article, we will focus on how to use this vulnerability and propose a python script that decrypts a message encrypted in AES-CBC.
 
 * * *
-## 2- Usage
+## 2- Script Usage
 
 If you're only insterested in using the code, the chapter 2 is all you need. However, please note that this code consider that you know the initialization vector, which is usually wrong in real life
 
@@ -83,6 +77,8 @@ With regard to symmetric encryption, data can be encrypted in two ways. There ar
 
 There are several operating modes for block encryption, such as Cipher Block Chaining (CBC), as well as CFB, ECB... etc.
 
+
+
 ### 3.2- Cipher Block Chaining (CBC)
 In CBC mode, each block of plaintext is XORed with the previous ciphertext block before being encrypted. This way, each ciphertext block depends on all plaintext blocks processed up to that point. To make each message unique, an initialization vector must be used in the first block. 
 
@@ -92,8 +88,8 @@ CBC has been the most commonly used mode of operation, in applications such as V
 
 If the first block has the index 0, the mathematical formula for CBC encryption is:
 
-C<sub>i</sub> = E<sub>K</sub> (P<sub>i</sub> ⊕ C<sub>i-1</sub>) for i ≥ 1,     
-C<sub>0</sub> = IV
+**C<sub>i</sub> = E<sub>K</sub> (P<sub>i</sub> ⊕ C<sub>i-1</sub>) for i ≥ 1,     
+C<sub>0</sub> = IV**
 
 Where E<sub>K</sub> is the function of encryption with the key K and C<sub>0</sub> is equal to the initialization vector.
 
@@ -153,14 +149,8 @@ def oracle(encrypted):
 
 
 
-Happy hacking !   : smiley:
-
-
-
-
-
-
-
 Happy hacking !   
+
+
 
 _[<-- Back](https://flast101.github.io)_
