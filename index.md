@@ -59,7 +59,7 @@ Decrypted message:  Try harder ! The quieter you become the more you are able to
 
 
 
-![0a21961fb702518e3c48c01505d1c6ae.png](:/b1d6df3b55cf4eb59689f91f3ce12c0e)
+![example.png](images/example.png "example.png")
 
 
 
