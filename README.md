@@ -169,9 +169,9 @@ We have something really interesting here because this fromula is the link betwe
 - X: this is the element that we control, we can choose it.
 - C<sub>2</sub>: this is the penultimate encrypted block.
 
-**Known elements:**
+**Unknown elements:**
 - P<sub>3</sub>: the last plaintext block, which we are trying to find.
-- P'<sub>1</sub>: the plaintext block coming from the concatenation of X and C<sub>3</sub>, and which depends on padding mechanism. We actually don't know it yet, but we will discover it thanks to the padding in the next xchapter.
+- P'<sub>1</sub>: the plaintext block coming from the concatenation of X and C<sub>3</sub>, and which depends on padding mechanism. We don't know it, but we will discover it thanks to the padding in the next xchapter.
 
 **More importantly, this equation has no cryptography anymore, only XOR. We could skip the cryptographic aspect only with math.**
 
