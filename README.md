@@ -154,7 +154,6 @@ It gives the following Diagram:
 
 ![two_blocks.png](images/two_blocks.png "two_blocks.png")
 
-* * *
 
 Applying our maths to this diagram, we can write the 2 following formulas:
 
@@ -178,6 +177,7 @@ We have something really interesting here because this fromula is the link betwe
 
 This is exactely where resides the vulnerability of CBC mode... and the beauty of this attack. Using math, we have just demonstrated that we can get rid of cryptography  if we know how PKCS7 padding works.
 
+* * *
 ## 5- Padding Oracle Attack
 
 
