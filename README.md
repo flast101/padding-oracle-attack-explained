@@ -1,4 +1,3 @@
-
 # Padding Oracle Attack Explained
 Padding Oracle attack fully explained and coded from scratch in Python3.
 
@@ -55,7 +54,9 @@ Decrypted message:  Try harder ! The quieter you become the more you are able to
 ~~~
 
 
+
 ![example.png](images/example.png "example.png")
+
 
 
 
@@ -130,15 +131,54 @@ def oracle(encrypted):
 
 ### 4.3- CBC mode vulnerability
 
+Let's take a theoretical example, a character string which, when padded, is made of 4 blocks of 16 bytes each. The 4 plaintext blocks are P<sub>0</sub> to P<sub>3</sub> and the 4 encrypted blocks are C<sub>1</sub> to C<sub>3</sub>.
 
+We can illustrate it with the following diagram:
 
 ![four_blocks.png](images/four_blocks.png "four_blocks.png")
 
+We wrote this formula in th eprvious chapter:   
+**C<sub>i</sub> = E<sub>K</sub> (P<sub>i</sub> ⊕ C<sub>i-1</sub>)**
+
+If we pply decryption on both side of the formula, it gives    
+**D<sub>K</sub> ( C<sub>i</sub> ) = P<sub>i</sub> ⊕ C<sub>i-1</sub>**    
+
+And thanks to XOR properties:
+**P<sub>i</sub> = D<sub>K</sub> ( C<sub>i</sub> ) ⊕ C<sub>i-1</sub>** 
+ 
+
+
+Now let's take a totally random new X block. It's a block that we create and that we that we can change. Let's take with it the last encrypted block from our example, C<sub>3</sub>, and concatenate them.
+
+It gives the following Diagram:
+
+![two_blocks.png](images/two_blocks.png "two_blocks.png")
 
 * * *
+
+Applying our maths to this diagram, we can write the 2 following formulas:
+
+- C<sub>3</sub> = E<sub>K</sub> ( P<sub>3</sub> ⊕ C<sub>2</sub> )
+- P'<sub>1</sub> = D<sub>K</sub> ( C<sub>3</sub> ) ⊕ X
+
+Now, we can replace "C<sub>3</sub>" by "E<sub>K</sub> ( P<sub>3</sub> ⊕ C<sub>2</sub> )" in the second formula:   
+**P'<sub>1</sub> = P<sub>3</sub> ⊕ C<sub>2</sub> ⊕ X**
+
+We have something really interesting here because this fromula is the link between 2 known elements and 2 unknown elements.
+
+**Known elements:**
+- X: this is the element that we control, we can choose it.
+- C<sub>2</sub>: this is the penultimate encrypted block.
+
+**Known elements:**
+- P<sub>3</sub>: the last plaintext block, which we are trying to find.
+- P'<sub>1</sub>: the plaintext block coming from the concatenation of X and C<sub>3</sub>, and which depends on padding mechanism. We actually don't know it yet, but we will discover it thanks to the padding in the next xchapter.
+
+**More importantly, this equation has no cryptography anymore, only XOR. We could skip the cryptographic aspect only with math.**
+
+This is exactely where resides the vulnerability of CBC mode... and the beauty of this attack. Using math, we have just demonstrated that we can get rid of cryptography  if we know how PKCS7 padding works.
+
 ## 5- Padding Oracle Attack
-
-
 
 
 
