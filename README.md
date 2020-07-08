@@ -18,7 +18,7 @@ Padding Oracle attack fully explained and coded from scratch in Python3.
 The padding oracle attack is a spectacular attack because it allows to decrypt a message that has been intercepted if the message was encrypted using CBC mode. 
 It will only require ensuring that we are able to obtain a response from the server that will serve as an Oracle (we'll come back to these in more detail later in this report). We will then be able to decrypt the entire message except the first block, un less you know the initialization vector.   
 
-In this article, we will focus on how to use this vulnerability and propose a python script that decrypts a message encrypted in AES-CBC.
+In this article, we will focus on how to use this vulnerability and propose a python script that exploits CBC mode to decrypt a message encrypted in AES-CBC.
 
 * * *
 ## 2- Script Usage
