@@ -109,7 +109,7 @@ The padding mainly used in block ciphers is defined by PKCS7 (Public-Key Cryptog
 Let N bytes be the size of a block. If M bytes are missing in the last block, then we will add the character ‘0xM’ M times at the end of the block.
 
 Here, we want to write a function which takes as input clear text in binary and which returns a boolean validating or invalidating the fact that the fact that this text is indeed a text with a padding in accordance with PKCS7.   
-The function is exposed in the code which follows under the name **_pkcs7_padding_**. It determines whether the input data (unencrypted text) may or may not meet PKCS7 requirements.
+The function is exposed in the code which follows under the name **_pkcs7_padding_**. It determines whether the input data may or may not meet PKCS7 requirements.
 
 ```python
 def pkcs7_padding(data):
