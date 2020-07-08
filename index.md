@@ -158,7 +158,7 @@ It gives the following Diagram:
 
 ![two_blocks.png](images/two_blocks.png "two_blocks.png")
 
-* * *
+
 
 Applying our maths to this diagram, we can write the 2 following formulas:
 
