@@ -179,7 +179,82 @@ This is exactely where resides the vulnerability of CBC mode... and the beauty o
 
 * * *
 ## 5- Padding Oracle Attack
+### 5.1- Last byte
 
+We just saw that    
+P'<sub>1</sub> = P<sub>3</sub> ⊕ C<sub>2</sub> ⊕ X
+
+As XOR operation is commutative, the following formula is also true:
+**P<sub>3</sub> = P'<sub>1</sub> ⊕ C<sub>2</sub> ⊕ X**
+
+This equality only contains the XOR operation. As you know, the XOR is a bit by bit operation, so we can split this equality by calculating it byte by byte.
+Our blocks size are 16 bytes, we have the following equations:   
+P<sub>3</sub>[0] = P'<sub>1</sub>[0] ⊕ C<sub>2</sub>[0] ⊕ X[0]   
+P<sub>3</sub>[1] = P'<sub>1</sub>[1] ⊕ C<sub>2</sub>[1] ⊕ X[1]    
+P<sub>3</sub>[2] = P'<sub>1</sub>[2] ⊕ C<sub>2</sub>[2] ⊕ X[2]  
+(...)   
+P<sub>3</sub>[14] = P'<sub>1</sub>[14] ⊕ C<sub>2</sub>[14] ⊕ X[14]   
+P<sub>3</sub>[15] = P'<sub>1</sub>[15] ⊕ C<sub>2</sub>[15] ⊕ X[15]
+
+We also know that the decryption of an encrypted text must be a plaintext with a valid padding, therefore ending with 0x01 or 0x02 0x02 etc.   
+As we control all bytes of X, we can bruteforce the last byte (256 values between 0 and 255) until we obtain a valid padding, i.e. until the oracle function returns _"True"_ when its input is X + C<sub>3</sub> (concatenation of X and C<sub>3</sub>).     
+**In this case, it will mean that the clear text padding of P’<sub>1</sub> ends with 0x01.**
+
+
+Once we find the last byte of X which gives the valid padding, we know that the padding value P’_2 [15] = 0x01, which means:   
+**P<sub>3</sub>[15] = P'<sub>1</sub>[15] ⊕ C<sub>2</sub>[15] ⊕ X[15] = 0x01 ⊕ C<sub>2</sub>[15] ⊕ X[15]**
+
+With this information, we find the last byte of the last block of text plaintext (which is padding, but it's a good start)!
+
+### 5.2- Who's next ?
+
+Now, we will look for the value of the previous byte of P<sub>3</sub>, ie. P<sub>3</sub>[14] in our case.
+
+We are going to assume here that we have a padding of 0x02 on P’<sub>1</sub>, which results in P’<sub>1</sub>[15] = P’<sub>1</sub>[14] = 0x02. And by the way, our P<sub>3</sub>[15] is now known since we just found it.   
+
+So this time we have the following:
+
+- X[15] = P'<sub>1</sub>[15] ⊕ C<sub>2</sub>[15] ⊕ P<sub>3</sub>[15] = 0x02 ⊕ C<sub>2</sub>[​ 15​ ] ⊕ P<sub>3</sub>[15] where C<sub>2</sub>[15] et P<sub>3</sub>[15] are known
+- P<sub>3</sub>[14] = P'<sub>1</sub>[14] ⊕ C<sub>2</sub>[14] ⊕ X[14] = ​ 0x02​ ⊕ C<sub></sub>[14] ⊕ X[14] 
+ 
+It is therefore X[14] that we brute force, that is to say that we vary between 0 and 256 in hexa, with P'<sub>1</sub>[14] whose value is 0x02, to find an X + C<sub>3</sub> whose padding is valid.
+
+We have all the values in hand which allow us to find P<sub>3</sub>[14], and ffter this step we know the last 2 bytes of P<sub>3</sub>, that is to say the plain text that interests us.
+
+### 5.3 Generalize it.
+
+This reasoning is to be looped until you find all the values ​​of the plaintext of the block.
+
+Once the block has been decrypted, just take the next blocks and apply exactly the same reasoning. We will then find the blocks P<sub>2</sub>, and P<sub>1</sub>.
+
+However, a problem arises in finding the block P<sub>0</sub>. Indeed, for the previous cases, the decryption was based on the knowledge of the encrypted block which preceded the block being
+decrypted. However, for the first block, you must know the IV used. In this case, no miracle:
+
+- Either you know the IV (Initiation Vector or Initialization Vector), in which case it's the same reasoning,
+- Or you try to guess it using usual combinations, such as a
+null IV, or a series of consecutive bytes and you may or may not decrypt the last block.    
+
+If we cannot find it, then we will have to settle for the decryption of blocks 1 to N-1.
+
+### 5.4 One formula to rule them all.
+
+We can notice that we have everything we need to decrypt the text but let's recap.
+
+We have encrypted text which we know is encrypted in N blocks of size B. From there, we can split the encrypted text into N blocks where N = (encrypted message size) / B.    
+If the message has been encrypted correctly, N is necessarily an integer.
+
+We split the text into N blocks of B bytes and we start with the last byte of the last block. At this stage :    
+
+P<sub>N-1</sub>[B-1] = P'<sub>1</sub>[B-1] ⊕ C<sub>N-2</sub>[B-1] ⊕ X[B-1] = 0x01 ⊕ C<sub>N-2</sub>[B-1] ⊕ X[B-1] 
+where X[B-1] is the byte that satisfied the requirements of PKCS7.
+
+**Then, we iterate on i between 0 and B-1 and on j between 0 and N-1. At each turn, we have:**
+
+
+**- X[i+1] = P'<sub>1</sub>[i+1] ⊕ C<sub>j-1</sub>[i+1] ⊕ P<sub>j</sub>[i+1] = 0x02 ⊕ C<sub>j-1</sub>[i+1] ⊕ P<sub>j/sub>[i+1]**     
+where C<sub>j-1</sub>[i+1] and P<sub>j</sub>[i+1] are known.     
+**- P<sub>j</sub>[i] = P'<sub>1</sub>[i] ⊕ C<sub>j-1</sub>[i] ⊕ X[i] = 0x02 ⊕ C<sub>j-1</sub>[i] ⊕ X[i]**    
+where X[i] is the byte that satisfied the requirements of PKCS7.
 
 
 
