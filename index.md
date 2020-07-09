@@ -185,6 +185,34 @@ This is exactely where resides the vulnerability of CBC mode... and the beauty o
 * * * 
 ## 5- Padding Oracle Attack
 
+### 5.1- Last byte
+
+We just saw that    
+P'<sub>1</sub> = P<sub>3</sub> ⊕ C<sub>2</sub> ⊕ X
+
+As XOR operation is commutative, the following formula is also true:
+**P<sub>3</sub> = P'<sub>1</sub> ⊕ C<sub>2</sub> ⊕ X**
+
+This equality only contains the XOR operation. As you know, the XOR is a bit by bit operation, so we can split this equality by calculating it byte by byte.
+Our blocks size are 16 bytes, we have the following equations:   
+P<sub>3</sub>[0] = P'<sub>1</sub>[0] ⊕ C<sub>2</sub>[0] ⊕ X*[0]   
+P<sub>3</sub>[1] = P'<sub>1</sub>[1] ⊕ C<sub>2</sub>[1] ⊕ X*[1]    
+P<sub>3</sub>[2] = P'<sub>1</sub>[2] ⊕ C<sub>2</sub>[2] ⊕ X*[2]  
+(...)   
+P<sub>3</sub>[14] = P'<sub>1</sub>[14] ⊕ C<sub>2</sub>[14] ⊕ X*[14]   
+P<sub>3</sub>[15] = P'<sub>1</sub>[15] ⊕ C<sub>2</sub>[15] ⊕ X*[15]
+
+We also know that the decryption of an encrypted text must be a plaintext with a valid padding, therefore ending with 0x01 or 0x02 0x02 etc.   
+As we control all bytes of X, we can bruteforce the last byte (256 values between 0 and 255) until we obtain a valid padding, i.e. until the oracle function returns _"True"_ when its input is X + C<sub>3</sub> (concatenation of X and C<sub>3</sub>).     
+**In this case, it will mean that the clear text padding of P’<sub>1</sub> ends with 0x01.**
+
+
+Once we find the last byte of X which gives the valid padding, we know that the padding value P’_2 [15] = 0x01, which means:   
+**P<sub>3</sub>[15] = P'<sub>1</sub>[15] ⊕ C<sub>2</sub>[15] ⊕ X[15] = 0x01 ⊕ C<sub>2</sub>[15] ⊕ X[15]**
+
+### 5.2-
+
+With this information, we find the last byte of the last block of text plaintext (which is padding, but it's a good start)!
 
 
 
