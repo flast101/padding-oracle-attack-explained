@@ -250,7 +250,7 @@ where X[B-1] is the byte that satisfied the requirements of PKCS7.
 **Then, we iterate on i between 0 and B-1 and on j between 0 and N-1. At each turn, we have:**
 
 
-**- X[i+1] = P'<sub>1</sub>[i+1] ⊕ C<sub>j-1</sub>[i+1] ⊕ P<sub>j</sub>[i+1] = 0x02 ⊕ C<sub>j-1</sub>[i+1] ⊕ P<sub>j/sub>[i+1]**     
+**- X[i+1] = P'<sub>1</sub>[i+1] ⊕ C<sub>j-1</sub>[i+1] ⊕ P<sub>j</sub>[i+1] = 0x02 ⊕ C<sub>j-1</sub>[i+1] ⊕ P<sub>j</sub>[i+1]**     
 where C<sub>j-1</sub>[i+1] and P<sub>j</sub>[i+1] are known.     
 **- P<sub>j</sub>[i] = P'<sub>1</sub>[i] ⊕ C<sub>j-1</sub>[i] ⊕ X[i] = 0x02 ⊕ C<sub>j-1</sub>[i] ⊕ X[i]**    
 where X[i] is the byte that satisfied the requirements of PKCS7.
