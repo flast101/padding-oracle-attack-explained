@@ -206,7 +206,7 @@ Once we find the last byte of X which gives the valid padding, we know that the 
 
 With this information, we find the last byte of the last block of text plaintext (which is padding, but it's a good start)!
 
-### 5.2- Who's next ?
+### 5.2- What else ?
 
 Now, we will look for the value of the previous byte of P<sub>3</sub>, ie. P<sub>3</sub>[14] in our case.
 
@@ -221,7 +221,7 @@ It is therefore X[14] that we brute force, that is to say that we vary between 0
 
 We have all the values in hand which allow us to find P<sub>3</sub>[14], and ffter this step we know the last 2 bytes of P<sub>3</sub>, that is to say the plain text that interests us.
 
-### 5.3 Generalize it.
+### 5.3- Generalize it.
 
 This reasoning is to be looped until you find all the values ​​of the plaintext of the block.
 
@@ -236,7 +236,7 @@ null IV, or a series of consecutive bytes and you may or may not decrypt the las
 
 If we cannot find it, then we will have to settle for the decryption of blocks 1 to N-1.
 
-### 5.4 One formula to rule them all.
+### 5.4- One formula to rule them all.
 
 We can notice that we have everything we need to decrypt the text but let's recap.
 
