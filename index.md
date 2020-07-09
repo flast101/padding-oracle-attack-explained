@@ -237,8 +237,7 @@ However, a problem arises in finding the block P<sub>0</sub>. Indeed, for the pr
 decrypted. However, for the first block, you must know the IV used. In this case, no miracle:
 
 - Either you know the IV (Initiation Vector or Initialization Vector), in which case it's the same reasoning,
-- Or you try to guess it using usual combinations, such as a
-null IV, or a series of consecutive bytes and you may or may not decrypt the last block.    
+- Or you try to guess it using usual combinations, such as a null IV, or a series of consecutive bytes and you may or may not decrypt the last block.    
 
 If we cannot find it, then we will have to settle for the decryption of blocks 1 to N-1.
 
