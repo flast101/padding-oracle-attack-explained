@@ -85,7 +85,7 @@ CBC has been the most commonly used mode of operation, e.g. in applications such
 ![cbc_mode.png](images/cbc_mode.png "cbc_mode.png")
 
 If the first block has the index 0, the mathematical formula for CBC encryption is:    
-**C<sub>i</sub> = E<sub>K</sub> (P<sub>i</sub> ⊕ C<sub>i-1</sub>) for i ≥ 1,     **
+**C<sub>i</sub> = E<sub>K</sub> (P<sub>i</sub> ⊕ C<sub>i-1</sub>) for i ≥ 1,**     
 **C<sub>0</sub> = E<sub>K</sub> (P<sub>0</sub> ⊕ IV)**
 
 For Decryption, we have:   
