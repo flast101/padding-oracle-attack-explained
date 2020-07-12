@@ -100,11 +100,12 @@ Decrypting with the incorrect IV causes the first block of plaintext to be corru
 ## 4.- Exploiting CBC mode
 ### 4.1- PKCS7 padding validation function
 
-The padding mainly used in block ciphers is defined by PKCS7 (Public-Key Cryptography Standards) whose operation is described in RFC 5652.   
-N is the number of bytes of a block. If M bytes are missing in the last block, then we will add the character **‘0xM’** M times at the end of the block.
+The padding mainly used in block ciphers is defined by [PKCS7](https://docs.deistercloud.com/content/Axional%20development%20libraries.20/Axional%20JS%20Script/AX%20Library.10/crypt/PKCS/PKCS7.xml?embedded=true) (Public-Key Cryptography Standards) whose operation is described in [RFC 5652](https://tools.ietf.org/html/rfc5652). If N is the number of bytes of a block and M bytes (M < N) are missing in the last block, then we will add the character **‘0xM’** M times at the end of the block. PKCS7 padding is also done this way.
 
-Here, we want to write a function which takes clear text in binary as input and which returns a boolean validating or invalidating the fact that this text is indeed a text with a PKCS7 padding.   
-The function is exposed in the code which follows under the name **_pkcs7_padding_**. It determines whether the input data may or may not meet PKCS7 requirements.
+When the block will be decrypted there will be a verification to check if the padding is good or wrong. If we can know when we have a bad or a good padding, e.g. the server sends back an "error padding" or "404 not found" message when the padding is wrong. We will call this our Oracle. 
+
+Here, we want to write this function, a function which takes clear text in binary as input and which returns a boolean validating or invalidating the fact that this text is indeed a text with a PKCS7 padding.   
+The function is exposed in the code which follows under the name **`pkcs7_padding`**. It determines whether the input data may or may not meet PKCS7 requirements.
 
 ```python
 def pkcs7_padding(data):
