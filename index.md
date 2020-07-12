@@ -89,9 +89,9 @@ If the first block has the index 0, the mathematical formula for CBC encryption 
 **C<sub>0</sub> = E<sub>K</sub> (P<sub>0</sub> ⊕ IV)**
 
 For decryption, we have:   
-P<sub>i</sub> = D<sub>K</sub>(C<sub>i</sub>) ⊕ C<sub>i-1</sub>     
+**P<sub>i</sub> = D<sub>K</sub>(C<sub>i</sub>) ⊕ C<sub>i-1</sub>**     
 
-Where E <sub>K</sub> is the function of encryption with the key K, D<sub>K</sub> is the function of decryption with the key K, IV the initialization vector, and C<sub>0</sub> is the first crypted block.
+Where E<sub>K</sub> is the function of encryption with the key K, D<sub>K</sub> is the function of decryption with the key K, IV the initialization vector, and C<sub>0</sub> is the first crypted block.
 
 
 Decrypting with the incorrect IV causes the first block of plaintext to be corrupt but subsequent plaintext blocks will be correct. This is because each block is XORed with the ciphertext of the previous block, not the plaintext, so one does not need to decrypt the previous block before using it as the IV for the decryption of the current one. This means that a plaintext block can be recovered from two adjacent blocks of ciphertext. 
