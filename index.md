@@ -88,7 +88,7 @@ If the first block has the index 0, the mathematical formula for CBC encryption 
 **C<sub>i</sub> = E<sub>K</sub> (P<sub>i</sub> ⊕ C<sub>i-1</sub>) for i ≥ 1,**     
 **C<sub>0</sub> = E<sub>K</sub> (P<sub>0</sub> ⊕ IV)**
 
-For Decryption, we have:   
+For decryption, we have:   
 **P<sub>i</sub> = D<sub>k</sub>(C<sub>i</sub>) ⊕ C<sub>i-1</sub>**     
 
 Where E<sub>K</sub> is the function of encryption with the key K, D<sub>K</sub> is the function of decryption with the key K, IV the initialization vector, and C<sub>0</sub> is the first crypted block.
