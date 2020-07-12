@@ -200,7 +200,7 @@ We have something really interesting here because this fromula is the link betwe
 
 **Unknown elements:**
 - P<sub>3</sub>: the last plaintext block, which we are trying to find.
-- P'<sub>1</sub>: the plaintext block coming from the concatenation of X and C<sub>3</sub>, and which depends on padding mechanism. We don't know it, but we will discover it thanks to the padding in the next xchapter.
+- P'<sub>1</sub>: the plaintext block coming from the concatenation of X and C<sub>3</sub>, and which depends on padding mechanism. We don't know it, but we will discover it thanks to the padding in the next chapter.
 
 **More importantly, this equation has no cryptography anymore, only XOR. We could skip the cryptographic aspect only with math.**
 
@@ -234,7 +234,7 @@ As we control all bytes of X, we can bruteforce the last byte (256 values betwee
 Once we find the last byte of X which gives the valid padding, we know that the padding value P’_2 [15] = 0x01, which means:   
 **P<sub>3</sub>[15] = P'<sub>1</sub>[15] ⊕ C<sub>2</sub>[15] ⊕ X[15] = 0x01 ⊕ C<sub>2</sub>[15] ⊕ X[15]**
 
-With this information, we find the last byte of the last block of text plaintext (which is padding, but it's a good start)!
+With this information, we find the last byte of the last block of text plaintext.
 
 ### 5.2- What else ?
 
