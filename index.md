@@ -19,7 +19,7 @@ Padding Oracle attack fully explained and coded from scratch in Python3.
 * * *
 ## 1- Overview
 
-The padding oracle attack is a spectacular attack because it allows to decrypt a message that has been intercepted if the message was encrypted using CBC mode. Its POODLE Variant Padding Oracle On Downgraded Legacy Encryption is a man-in-the-middle exploit which takes advantage of Internet and security software clients' fallback to SSL 3.0.[1][2][3] If attackers successfully exploit this vulnerability, on average, they only need to make 256 SSL 3.0 requests to reveal one byte of encrypted messages.   
+The padding oracle attack is a spectacular attack because it allows to decrypt a message that has been intercepted if the message was encrypted using CBC mode. Its POODLE Variant Padding Oracle On Downgraded Legacy Encryption is a man-in-the-middle exploit which takes advantage of Internet and security software clients' fallback to SSL 3.0. If attackers successfully exploit this vulnerability, on average, they only need to make 256 SSL 3.0 requests to reveal one byte of encrypted messages.   
 It will only require ensuring that we are able to obtain a response from the server that will serve as an Oracle (we'll come back to these in more detail later in this report). We will then be able to decrypt the entire message except the first block, un less you know the initialization vector.   
 
 You can find more informtions on [Padding Oracle Attack](https://en.wikipedia.org/wiki/Padding_oracle_attack) and [POODLE](https://en.wikipedia.org/wiki/POODLE).
@@ -80,7 +80,7 @@ There are several operating modes for block encryption, such as Cipher Block Cha
 
 In CBC mode, each block of plaintext is XORed with the previous ciphertext block before being encrypted. This way, each ciphertext block depends on all plaintext blocks processed up to that point. To make each message unique, an initialization vector must be used in the first block. 
 
-CBC has been the most commonly used mode of operation, e.g. in applications such as VPN with OpenVPN or IPsec. Its main drawbacks are that encryption is sequential (i.e., it cannot be parallelized), and that the message must be **padded** to a multiple of the cipher block size.
+CBC has been the most commonly used mode of operation, e.g. in applications such as SSL or VPN like OpenVPN and IPsec. Its main drawbacks are that encryption is sequential (i.e., it cannot be parallelized), and that the message must be **padded** to a multiple of the cipher block size.
 
 ![cbc_mode.png](images/cbc_mode.png "cbc_mode.png")
 
