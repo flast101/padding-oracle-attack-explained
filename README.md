@@ -7,11 +7,12 @@ Padding Oracle attack fully explained and coded from scratch in Python3.
 
 ### Summary  
 
-1- Overview   
-2- Script Usage    
-3- AES-CBC Ciphering    
-4- Exploiting CBC mode    
-5- Padding Oracle Attack    
+[1- Overview]()   
+[2- Script Usage]()    
+[3- AES-CBC Ciphering]()    
+[4- Exploiting CBC mode]()    
+[5- Padding Oracle Attack]()    
+[6- Python3 Script]()
 
 * * *
 ## 1- Overview
@@ -126,7 +127,37 @@ def pkcs7_padding(data):
 Here, we want a function that determines whether an encrypted text corresponds to PKCS7 padding valid encrypted data. It simply calls our **_pkcs7_padding_** and apply it to the AES decryption of a message. It plays the role of the Oracle, which is the actual server receiving the message of the communication.
 This Oracle function will be used a lots to exploit the CBC vulnerability.
 
+Here, we want a function that determines whether an encrypted text corresponds to PKCS7 padding valid encrypted data. It simply calls our **_pkcs7_padding_** and apply it to the AES decryption of a message. It plays the role of the Oracle, which is the actual server receiving the message of the communication.
+This Oracle function will be used a lots to exploit the CBC vulnerability.
+
+Here is the script oracle.py using the oracle function:
+
 ```python
+#!/usr/bin/env python3
+import sys,os
+from Crypto.Cipher import AES
+from settings import *
+mode = AES.MODE_CBC
+
+# AES CBC decryption 
+def decryption(encrypted):
+    decryptor = AES.new(key, mode, IV=IV)
+    return decryptor.decrypt(encrypted)
+
+
+# Ckeck validity of PKCS7 padding
+def pkcs7_padding(data):
+    pkcs7 = True
+    last_byte_padding = data[-1]
+    if(last_byte_padding < 1 or last_byte_padding > 16):
+        pkcs7 = False
+    else:
+        for i in range(0,last_byte_padding):
+            if(last_byte_padding != data[-1-i]):
+                pkcs7 = False
+    return pkcs7
+
+# Determine if the message is encrypted with valid PKCS7 padding
 def oracle(encrypted):
     return pkcs7_padding(decryption(encrypted))
 ```
@@ -188,7 +219,7 @@ This is exactely where resides the vulnerability of CBC mode... and the beauty o
 We just saw that    
 P'<sub>1</sub> = P<sub>3</sub> ⊕ C<sub>2</sub> ⊕ X
 
-As XOR operation is commutative, the following formula is also true:
+As XOR operation is commutative, the following formula is also true:   
 **P<sub>3</sub> = P'<sub>1</sub> ⊕ C<sub>2</sub> ⊕ X**
 
 This equality only contains the XOR operation. As you know, the XOR is a bit by bit operation, so we can split this equality by calculating it byte by byte.
@@ -260,8 +291,72 @@ where C<sub>j-1</sub>[i+1] and P<sub>j</sub>[i+1] are known.
 where X[i] is the byte that satisfied the requirements of PKCS7.
 
 
+* * * 
+## 6- Python3 Script
 
+Here is the python3 script **`poracle-exploit.py`**:
+```python
+#!/usr/bin/env python3
+from settings import *
+from oracle import *
 
+##########################################
+# Padding Oracle Attack Proof of Concept #
+##########################################
+
+def poc(encrypted):
+    block_number = len(encrypted)//BYTE_NB
+    decrypted = bytes()
+    # Go through each block
+    for i in range(block_number, 0, -1):
+        current_encrypted_block = encrypted[(i-1)*BYTE_NB:(i)*BYTE_NB]
+        # At the first encrypted block, use the initialization vector if it is known
+        if(i == 1):
+            previous_encrypted_block = bytearray(IV.encode("ascii"))
+        else:
+            previous_encrypted_block = encrypted[(i-2)*BYTE_NB:(i-1)*BYTE_NB]
+        bruteforce_block = previous_encrypted_block
+        current_decrypted_block = bytearray(IV.encode("ascii"))
+        padding = 0
+        # Go through each byte of the block
+        for j in range(BYTE_NB, 0, -1):
+            padding += 1
+            # Bruteforce byte value
+            for value in range(0,256):
+                bruteforce_block = bytearray(bruteforce_block)
+                bruteforce_block[j-1] = (bruteforce_block[j-1] + 1) % 256
+                joined_encrypted_block = bytes(bruteforce_block) + current_encrypted_block
+                # Ask the oracle
+                if(oracle(joined_encrypted_block)):
+                    current_decrypted_block[-padding] = bruteforce_block[-padding] ^ previous_encrypted_block[-padding] ^ padding
+                    # Prepare newly found byte values
+                    for k in range(1, padding+1):
+                        bruteforce_block[-k] = padding+1 ^ current_decrypted_block[-k] ^ previous_encrypted_block[-k]
+                    break
+        decrypted = bytes(current_decrypted_block) + bytes(decrypted)
+    return decrypted[:-decrypted[-1]]  # Padding removal
+
+#### Script ####
+
+usage = """
+Usage:
+  python3 poracle_exploit.py <message>         decrypts and displays the message
+  python3 poracle_exploit.py -o <hex code>     displays oracle answer
+
+Cryptographic parameters can be changed in settings.py
+"""
+
+if __name__ == '__main__':
+    if len(sys.argv) == 2 : #chiffrement
+        if len(sys.argv[1])%16!=0:       # code size security
+            rint(usage)
+        else:
+            print("Decrypted message: ", poc(bytes.fromhex(sys.argv[1])).decode("ascii"))
+    elif len(sys.argv) == 3 and sys.argv[1] == '-o' : #oracle
+        print(oracle(bytes.fromhex(sys.argv[2])))
+    else:
+        print(usage)
+```
 
 Happy hacking !   
 
