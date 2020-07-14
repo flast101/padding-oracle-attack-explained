@@ -18,7 +18,7 @@ Padding Oracle attack fully explained and coded from scratch in Python3.
 ## 1- Overview
 
 The padding oracle attack is a spectacular attack because it allows to decrypt a message that has been intercepted if the message was encrypted using CBC mode. POODLE (Padding Oracle On Downgraded Legacy Encryption) is a man-in-the-middle exploit which takes advantage of Internet and security software clients' fallback to SSL 3.0. If attackers successfully exploit this vulnerability, on average, they only need to make 256 SSL 3.0 requests to reveal one byte of encrypted messages.   
-It will only require ensuring that we are able to obtain a response from the server that will serve as an Oracle (we'll come back to these in more detail later in this report). We will then be able to decrypt the entire message except the first block, un less you know the initialization vector.   
+It will only require ensuring that we are able to obtain a response from the server that will serve as an Oracle (we'll come back to these in more detail later in this report). We will then be able to decrypt the entire message except the first block, unless we know the initialization vector.   
 
 You can find more informtions on [Padding Oracle Attack](https://en.wikipedia.org/wiki/Padding_oracle_attack) and [POODLE](https://en.wikipedia.org/wiki/POODLE).
 
