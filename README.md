@@ -1,9 +1,5 @@
-
 # Padding Oracle Attack Explained
 Padding Oracle attack fully explained and coded from scratch in Python3.
-
------- Page Under Construction -------
-
 
 ### Summary  
 
@@ -27,15 +23,15 @@ In this article, we will focus on how to use this vulnerability and propose a py
 * * *
 ## 2- Script Usage
 
-If you're only insterested in using the code, the chapter 2 is all you need. However, please note that this code consider that you know the initialization vector, which is usually wrong in real life.
+If you're only insterested in using the code, the chapter 2 is all you need. However, please note you won't be able to decrypt the first block if you don't know the initialization vector.
 
 [Download](https://github.com/flast101/padding-oracle-attack-explained/archive/master.zip) to get the script or `$ git clone https://github.com/flast101/padding-oracle-attack-explained.git`   
 
-Cryptographic parameters can be changed in **`settings.py`**.
+Cryptographic parameters can be changed in **`settings.py`**. Particularly, you can enter the initialization vector (IV) if you know it. I you don't, enter a random value (the length must be the same as a block).
 
 Encyption and decryption using AES-CBC algorithm with **`aescbc.py`**:
 ~~~
-$ python3 aescbc.py <message>         encrypts and displays the message (output in hex format)
+$ python3 aescbc.py <message>          encrypts and displays the message (output in hex format)
 $ python3 aescbc.py -d <hex code>      decrypts and displays the message
 ~~~
 
@@ -48,12 +44,14 @@ $ python3 poracle_exploit.py <message>         decrypts and displays the message
 
 
 ## Example
-
-
+If you know the IV, you will be able to decrypt the whole message:
 
 ![example.png](images/example.png "example.png")
 
 
+In case you don't know the IV, you won't be able to decrypt the first blck and you will get a result as follows:
+
+![example-noiv.png](images/example-noiv.png "example-noiv.png")
 
 
 * * * 
@@ -344,7 +342,7 @@ Cryptographic parameters can be changed in settings.py
 if __name__ == '__main__':
     if len(sys.argv) == 2 : #chiffrement
         if len(sys.argv[1])%16!=0:       # code size security
-            rint(usage)
+            print(usage)
         else:
             print("Decrypted message: ", poc(bytes.fromhex(sys.argv[1])).decode("ascii"))
     elif len(sys.argv) == 3 and sys.argv[1] == '-o' : #oracle
@@ -353,5 +351,5 @@ if __name__ == '__main__':
         print(usage)
 ```
 
-Happy hacking !   
+Happy hacking ! :smiley:    
 
