@@ -15,18 +15,6 @@ Padding Oracle attack fully explained and coded from scratch in Python3.
 5- Padding Oracle Attack    
 6- Python3 Script
 
-# Padding Oracle Attack Explained
-Padding Oracle attack fully explained and coded from scratch in Python3.
-
-### Summary  
-
-[1- Overview](https://github.com/flast101/padding-oracle-attack-explained#1--overview)   
-[2- Script Usage](https://github.com/flast101/padding-oracle-attack-explained#2--script-usage)    
-[3- AES-CBC Ciphering](https://github.com/flast101/padding-oracle-attack-explained#3--aes-cbc-ciphering)    
-[4- Exploiting CBC mode](https://github.com/flast101/padding-oracle-attack-explained#4--exploiting-cbc-mode)    
-[5- Padding Oracle Attack](https://github.com/flast101/padding-oracle-attack-explained#5--padding-oracle-attack)    
-[6- Python3 Script](https://github.com/flast101/padding-oracle-attack-explained#6--python3-script)
-
 * * *
 ## 1- Overview
 
