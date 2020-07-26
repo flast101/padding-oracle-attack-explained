@@ -30,7 +30,7 @@ In this article, we will focus on how to use this vulnerability and propose a py
 
 If you're only insterested in using the code, the chapter 2 is all you need. However, please note you won't be able to decrypt the first block if you don't know the initialization vector.
 
-[Download](https://github.com/flast101/padding-oracle-attack-explained/archive/master.zip) to get the script or `$ git clone https://github.com/flast101/padding-oracle-attack-explained.git`   
+[Download](https://github.com/flast101/padding-oracle-attack-explained/archive/master.zip) to get the script or **`$ git clone https://github.com/flast101/padding-oracle-attack-explained.git`**   
 
 Cryptographic parameters can be changed in **`settings.py`**. Particularly, you can enter the initialization vector (IV) if you know it. I you don't, enter a random value (the length must be the same as a block).
 
@@ -54,7 +54,7 @@ If you know the IV, you will be able to decrypt the whole message:
 ![example.png](images/example.png "example.png")
 
 
-In case you don't know the IV, you won't be able to decrypt the first blck and you will get a result as follows:
+In case you don't know the IV, you won't be able to decrypt the first block and you will get a result as follows:
 
 ![example-noiv.png](images/example-noiv.png "example-noiv.png")
 
