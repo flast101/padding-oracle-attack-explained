@@ -10,7 +10,7 @@ Padding Oracle attack fully explained and coded from scratch in Python3.
 
 1- Overview   
 2- Script Usage    
-3- AES-CBC Ciphering    
+3- AES-CBC Encryption    
 4- Exploiting CBC mode    
 5- Padding Oracle Attack    
 6- Python3 Script
@@ -60,7 +60,7 @@ In case you don't know the IV, you won't be able to decrypt the first block and 
 
 
 * * * 
-## 3- AES-CBC Ciphering
+## 3- AES-CBC Encryption
 ### 3.1- Advanced Encryption Standard (AES)
 Safeguarding information has become mandatory in today’s cybersecurity world. Encryption is one such method to protect discret information being transferred online.
 
