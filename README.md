@@ -123,7 +123,7 @@ def pkcs7_padding(data):
 Here, we want a function that determines whether an encrypted text corresponds to PKCS7 padding valid encrypted data. It simply calls our **`pkcs7_padding`** and apply it to the AES decryption of a message. It plays the role of the Oracle, which is the actual server receiving the message of the communication.
 This Oracle function will be used a lots to exploit the CBC vulnerability.
 
-Here is the script oracle.py using the oracle function:
+Here is the script **`oracle.py`** using the oracle function:
 
 ```python
 #!/usr/bin/env python3
