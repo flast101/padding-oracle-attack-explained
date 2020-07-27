@@ -8,12 +8,26 @@ Padding Oracle attack fully explained and coded from scratch in Python3.
 
 ### Summary  
 
-1- Overview   
-2- Script Usage    
-3- AES-CBC Encryption    
-4- Exploiting CBC mode    
-5- Padding Oracle Attack    
-6- Python3 Script
+**1- Overview**   
+
+**2- Script Usage**    
+
+**3- AES-CBC Encryption**    
+3.1- Advanced Encryption Standard (AES)    
+3.2- Cipher Block Chaining (CBC)    
+
+**4- Exploiting CBC mode**    
+ 4.1- PKCS7 Padding Validation Function   
+ 4.2- Ask The Oracle Function  
+ 4.3- CBC Mode Vulnerability   
+ 
+**5- Padding Oracle Attack**   
+5.1- Last Byte    
+5.2- What Else ?   
+5.3- Generalize It   
+5.4- One Formula To Rule Them All   
+
+**6- Python3 Script**
 
 * * *
 ## 1- Overview
@@ -101,7 +115,7 @@ Decrypting with the incorrect IV causes the first block of plaintext to be corru
 
 * * *
 ## 4.- Exploiting CBC mode
-### 4.1- PKCS7 padding validation function
+### 4.1- PKCS7 Padding Validation Function
 
 The padding mainly used in block ciphers is defined by [PKCS7](https://docs.deistercloud.com/content/Axional%20development%20libraries.20/Axional%20JS%20Script/AX%20Library.10/crypt/PKCS/PKCS7.xml?embedded=true) (Public-Key Cryptography Standards) whose operation is described in [RFC 5652](https://tools.ietf.org/html/rfc5652). If N is the number of bytes of a block and M bytes (M < N) are missing in the last block, then we will add the character **‘0xM’** M times at the end of the block. PKCS7 padding is also done this way.
 
@@ -123,7 +137,7 @@ def pkcs7_padding(data):
     return pkcs7
 ```
 
-### 4.2- Ask the Oracle
+### 4.2- Ask The Oracle Function
 
 Here, we want a function that determines whether an encrypted text corresponds to PKCS7 padding valid encrypted data. It simply calls our **`pkcs7_padding`** and apply it to the AES decryption of a message. It plays the role of the Oracle, which is the actual server receiving the message of the communication.
 This Oracle function will be used a lots to exploit the CBC vulnerability.
@@ -160,7 +174,7 @@ def oracle(encrypted):
     return pkcs7_padding(decryption(encrypted))
 ```
 
-### 4.3- CBC mode vulnerability
+### 4.3- CBC Mode Vulnerability
 
 Let's take a theoretical example, a character string which, when padded, is made of 4 blocks of 16 bytes each. The 4 plaintext blocks are P<sub>0</sub> to P<sub>3</sub> and the 4 encrypted blocks are C<sub>1</sub> to C<sub>3</sub>.
 
@@ -212,7 +226,7 @@ This is exactely where resides the vulnerability of CBC mode... and the beauty o
 * * * 
 ## 5- Padding Oracle Attack
 
-### 5.1- Last byte
+### 5.1- Last Byte
 
 We just saw that    
 P'<sub>1</sub> = P<sub>3</sub> ⊕ C<sub>2</sub> ⊕ X
@@ -239,7 +253,7 @@ Once we find the last byte of X which gives the valid padding, we know that the 
 
 With this information, we find the last byte of the last block of text plaintext.
 
-### 5.2- What else ?
+### 5.2- What Else ?
 
 Now, we will look for the value of the previous byte of P<sub>3</sub>, ie. P<sub>3</sub>[14] in our case.
 
@@ -254,7 +268,7 @@ It is therefore X[14] that we brute force, that is to say that we vary between 0
 
 We have all the values in hand which allow us to find P<sub>3</sub>[14], and ffter this step we know the last 2 bytes of P<sub>3</sub>, that is to say the plain text that interests us.
 
-### 5.3- Generalize it.
+### 5.3- Generalize It
 
 This reasoning is to be looped until you find all the values ​​of the plaintext of the block.
 
@@ -268,7 +282,7 @@ decrypted. However, for the first block, you must know the IV used. In this case
 
 If we cannot find it, then we will have to settle for the decryption of blocks 1 to N-1.
 
-### 5.4- One formula to rule them all.
+### 5.4- One Formula To Rule Them All
 
 We can notice that we have everything we need to decrypt the text but let's recap.
 
