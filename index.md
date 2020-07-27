@@ -18,7 +18,7 @@ Padding Oracle attack fully explained and coded from scratch in Python3.
 
 **4- Exploiting CBC mode**    
  4.1- PKCS7 Padding Validation Function   
- 4.2- Ask The Oracle Function  
+ 4.2- Ask The Oracle   
  4.3- CBC Mode Vulnerability   
  
 **5- Padding Oracle Attack**   
@@ -46,7 +46,7 @@ If you're only insterested in using the code, the chapter 2 is all you need. How
 
 [Download](https://github.com/flast101/padding-oracle-attack-explained/archive/master.zip) to get the script or **`$ git clone https://github.com/flast101/padding-oracle-attack-explained.git`**   
 
-Cryptographic parameters can be changed in **`settings.py`**. Particularly, you can enter the initialization vector (IV) if you know it. I you don't, enter a random value (the length must be the same as a block).
+Cryptographic parameters (block size, initialization vector IV, and key) can be modified in **`settings.py`**. Particularly, you can enter the initialization vector (IV) if you know it. If you don't, enter any value (the length must be the same as a block), e.g. '\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'.
 
 Encyption and decryption using AES-CBC algorithm with **`aescbc.py`**:
 ~~~
@@ -54,7 +54,7 @@ $ python3 aescbc.py <message>          encrypts and displays the message (output
 $ python3 aescbc.py -d <hex code>      decrypts and displays the message
 ~~~
 
-Decrypting a message using the padding oracle attack **`poracle_exploit.py`**:
+Decrypting a message using the padding oracle attack with **`poracle_exploit.py`**:
 ~~~
 $ python3 poracle_exploit.py <message>         decrypts and displays the message
 ~~~
@@ -122,7 +122,7 @@ The padding mainly used in block ciphers is defined by [PKCS7](https://docs.deis
 When the block will be decrypted there will be a verification to check if the padding is good or wrong. If we can know when we have a bad or a good padding, e.g. the server sends back an "error padding" or "404 not found" message when the padding is wrong. We will call this our Oracle. 
 
 Here, we want to write this function, a function which takes clear text in binary as input and which returns a boolean validating or invalidating the fact that this text is indeed a text with a PKCS7 padding.   
-The function is exposed in the code which follows under the name **`pkcs7_padding`**. It determines whether the input data may or may not meet PKCS7 requirements.
+It determines whether the input data may or may not meet PKCS7 requirements. In our code, the function is named **`pkcs7_padding`**:
 
 ```python
 def pkcs7_padding(data):
@@ -137,7 +137,7 @@ def pkcs7_padding(data):
     return pkcs7
 ```
 
-### 4.2- Ask The Oracle Function
+### 4.2- Ask The Oracle   
 
 Here, we want a function that determines whether an encrypted text corresponds to PKCS7 padding valid encrypted data. It simply calls our **`pkcs7_padding`** and apply it to the AES decryption of a message. It plays the role of the Oracle, which is the actual server receiving the message of the communication.
 This Oracle function will be used a lots to exploit the CBC vulnerability.
@@ -155,7 +155,6 @@ mode = AES.MODE_CBC
 def decryption(encrypted):
     decryptor = AES.new(key, mode, IV=IV)
     return decryptor.decrypt(encrypted)
-
 
 # Ckeck validity of PKCS7 padding
 def pkcs7_padding(data):
@@ -207,7 +206,10 @@ Applying our maths to this diagram, we can write the 2 following formulas:
 - P'<sub>1</sub> = D<sub>K</sub> ( C<sub>3</sub> ) ⊕ X
 
 Now, we can replace "C<sub>3</sub>" by "E<sub>K</sub> ( P<sub>3</sub> ⊕ C<sub>2</sub> )" in the second formula:   
-**P'<sub>1</sub> = P<sub>3</sub> ⊕ C<sub>2</sub> ⊕ X**
+P'<sub>1</sub> = P<sub>3</sub> ⊕ C<sub>2</sub> ⊕ X
+
+As XOR operation is commutative, the following formula is also true:
+**P<sub>3</sub> = P'<sub>1</sub> ⊕ C<sub>2</sub> ⊕ X**
 
 We have something really interesting here because this fromula is the link between 2 known elements and 2 unknown elements.
 
@@ -217,11 +219,16 @@ We have something really interesting here because this fromula is the link betwe
 
 **Unknown elements:**
 - P<sub>3</sub>: the last plaintext block, which we are trying to find.
-- P'<sub>1</sub>: the plaintext block coming from the concatenation of X and C<sub>3</sub>, and which depends on padding mechanism. We don't know it, but we will discover it thanks to the padding in the next chapter.
+- P'<sub>1</sub>: the plaintext block coming from the concatenation of X and C<sub>3</sub>. We don't know it, but we will be able to discover it thanks to the padding mechanism.
 
-**More importantly, this equation has no cryptography anymore, only XOR. We could skip the cryptographic aspect only with math.**
+The 2 key points to understand here are:
+1. We know that the decryption of an encrypted text must be a plaintext with a valid padding, therefore ending with 0x01 or 0x02 0x02 etc, and so is P'<sub>1</sub>. We know each "end form" of P'<sub>1</sub> which satisfies this rule.      
+2. We can make X vary until we find a X value in acordance with each "end form" of P'<sub>1</sub>.
 
-This is exactely where resides the vulnerability of CBC mode... and the beauty of this attack. Using math, we have just demonstrated that we can get rid of cryptography  if we know how PKCS7 padding works.
+
+**As a conclusion o this chapter, we can say that this equation has no cryptography anymore, only XOR. We could skip the cryptographic aspect only with maths.**
+
+This is exactely where resides the vulnerability of CBC mode... and the beauty of this attack. Using maths, we have just demonstrated that we can get rid of cryptography if we know how PKCS7 padding works.
 
 * * * 
 ## 5- Padding Oracle Attack
@@ -229,13 +236,10 @@ This is exactely where resides the vulnerability of CBC mode... and the beauty o
 ### 5.1- Last Byte
 
 We just saw that    
-P'<sub>1</sub> = P<sub>3</sub> ⊕ C<sub>2</sub> ⊕ X
-
-As XOR operation is commutative, the following formula is also true:   
 **P<sub>3</sub> = P'<sub>1</sub> ⊕ C<sub>2</sub> ⊕ X**
 
 This equality only contains the XOR operation. As you know, the XOR is a bit by bit operation, so we can split this equality by calculating it byte by byte.
-Our blocks size are 16 bytes, we have the following equations:   
+As our blocks size is 16 bytes, we have the following equations:   
 P<sub>3</sub>[0] = P'<sub>1</sub>[0] ⊕ C<sub>2</sub>[0] ⊕ X[0]   
 P<sub>3</sub>[1] = P'<sub>1</sub>[1] ⊕ C<sub>2</sub>[1] ⊕ X[1]    
 P<sub>3</sub>[2] = P'<sub>1</sub>[2] ⊕ C<sub>2</sub>[2] ⊕ X[2]  
@@ -244,11 +248,11 @@ P<sub>3</sub>[14] = P'<sub>1</sub>[14] ⊕ C<sub>2</sub>[14] ⊕ X[14]
 P<sub>3</sub>[15] = P'<sub>1</sub>[15] ⊕ C<sub>2</sub>[15] ⊕ X[15]
 
 We also know that the decryption of an encrypted text must be a plaintext with a valid padding, therefore ending with 0x01 or 0x02 0x02 etc.   
-As we control all bytes of X, we can bruteforce the last byte (256 values between 0 and 255) until we obtain a valid padding, i.e. until the oracle function returns _"True"_ when its input is X + C<sub>3</sub> (concatenation of X and C<sub>3</sub>).     
+As we control all bytes of X, we can bruteforce the last byte (256 values between 0 and 255) until we obtain a valid padding for P'<sub>1</sub>, i.e. until the oracle function returns _"True"_ when its input is X + C<sub>3</sub> (concatenation of X and C<sub>3</sub>).     
 **In this case, it will mean that the clear text padding of P’<sub>1</sub> ends with 0x01.**
 
 
-Once we find the last byte of X which gives the valid padding, we know that the padding value P’_2 [15] = 0x01, which means:   
+Once we find the last byte of X which gives the valid padding, we know that the padding value P'<sub>1</sub>[15] = 0x01, which means:   
 **P<sub>3</sub>[15] = P'<sub>1</sub>[15] ⊕ C<sub>2</sub>[15] ⊕ X[15] = 0x01 ⊕ C<sub>2</sub>[15] ⊕ X[15]**
 
 With this information, we find the last byte of the last block of text plaintext.
@@ -257,34 +261,33 @@ With this information, we find the last byte of the last block of text plaintext
 
 Now, we will look for the value of the previous byte of P<sub>3</sub>, ie. P<sub>3</sub>[14] in our case.
 
-We are going to assume here that we have a padding of 0x02 on P’<sub>1</sub>, which results in P’<sub>1</sub>[15] = P’<sub>1</sub>[14] = 0x02. And by the way, our P<sub>3</sub>[15] is now known since we just found it.   
+We now have a padding of 0x02 0x02 (ie. '\x02\x02') on P’<sub>1</sub>, which results in P’<sub>1</sub>[15] = P’<sub>1</sub>[14] = 0x02. And by the way, our P<sub>3</sub>[15] is now known since we just found it.   
 
 So this time we have the following:
 
 - X[15] = P'<sub>1</sub>[15] ⊕ C<sub>2</sub>[15] ⊕ P<sub>3</sub>[15] = 0x02 ⊕ C<sub>2</sub>[​ 15​ ] ⊕ P<sub>3</sub>[15] where C<sub>2</sub>[15] et P<sub>3</sub>[15] are known
 - P<sub>3</sub>[14] = P'<sub>1</sub>[14] ⊕ C<sub>2</sub>[14] ⊕ X[14] = ​ 0x02​ ⊕ C<sub></sub>[14] ⊕ X[14] 
  
-It is therefore X[14] that we brute force, that is to say that we vary between 0 and 256 in hexa, with P'<sub>1</sub>[14] whose value is 0x02, to find an X + C<sub>3</sub> whose padding is valid.
+It is therefore X[14] that we brute force, that is to say that we vary between 0 and 256 in hexa, with P'<sub>1</sub>[14] value of 0x02.
 
-We have all the values in hand which allow us to find P<sub>3</sub>[14], and ffter this step we know the last 2 bytes of P<sub>3</sub>, that is to say the plain text that interests us.
+We have all the values in hand which allow us to find P<sub>3</sub>[14], and after this step we know the last 2 bytes of P<sub>3</sub>, which is what we are trying to find.
 
 ### 5.3- Generalize It
 
-This reasoning is to be looped until you find all the values ​​of the plaintext of the block.
+This reasoning is to be looped until you find all the plaintext values of the block.
 
-Once the block has been decrypted, just take the next blocks and apply exactly the same reasoning. We will then find the blocks P<sub>2</sub>, and P<sub>1</sub>.
+Once the block has been decrypted, we just have to take the next block and apply exactly the same reasoning, and so on... We will then find the blocks P<sub>2</sub>, and P<sub>1</sub>.
 
-However, a problem arises in finding the block P<sub>0</sub>. Indeed, for the previous cases, the decryption was based on the knowledge of the encrypted block which preceded the block being
-decrypted. However, for the first block, you must know the IV used. In this case, no miracle:
+However, a problem arises in finding the block P<sub>0</sub>. Indeed, for the previous cases, the decryption was based on the knowledge of the encrypted block which preceeded the block being decrypted. However, for the first block, you must know which IV is used. In this case, there is no miracle:
 
-- Either you know the IV (Initiation Vector or Initialization Vector), in which case it's the same reasoning,
+- Either you know the IV (Initialization Vector), in which case it's the same reasoning,
 - Or you try to guess it using usual combinations, such as a null IV, or a series of consecutive bytes and you may or may not decrypt the last block.    
 
 If we cannot find it, then we will have to settle for the decryption of blocks 1 to N-1.
 
 ### 5.4- One Formula To Rule Them All
 
-We can notice that we have everything we need to decrypt the text but let's recap.
+We can notice that we have everything we need to decrypt the text but let's recap before we cn write a script to automate the process.
 
 We have encrypted text which we know is encrypted in N blocks of size B. From there, we can split the encrypted text into N blocks where N = (encrypted message size) / B.    
 If the message has been encrypted correctly, N is necessarily an integer.
