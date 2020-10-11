@@ -373,7 +373,7 @@ if __name__ == '__main__':
         print(usage)
 ```
 
-Happy hacking !    
+Be Curious, Learning is Life !  
 
 
 _[<-- Home](https://flast101.github.io)_
