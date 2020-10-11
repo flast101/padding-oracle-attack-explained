@@ -355,5 +355,5 @@ if __name__ == '__main__':
 ```
 
 
-Happy hacking ! :smiley:    
+Be Curious, Learning is Life ! :smiley:    
 
